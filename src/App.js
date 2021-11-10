@@ -21,7 +21,8 @@ function App() {
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
   const [mapCenter, setMapcenter] = useState({ lat: 34.80746, lng: -40.4796 });
-  const [mapZoom, setMapZoom] = useState(2);
+  const [mapZoom, setMapZoom] = useState(3);
+  const [mapCountries, setMapCountries] = useState([]);
 
   useEffect(() => {
     const url = "https://disease.sh/v3/covid-19/all";
@@ -43,6 +44,7 @@ function App() {
           }));
           const sortedData = sortData(res.data);
           setTableData(sortedData);
+          setMapCountries(data);
           setCountries(countries);
         });
     };
@@ -56,11 +58,19 @@ function App() {
       countryCode === "worldwide"
         ? "https://disease.sh/v3/covid-19/all"
         : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
-    const data = await axios.get(url);
+    await axios.get(url).then((res) => {
+      const data = res.data;
+
+      setCountrySelected(countryCode);
+      setCountryInfo(data);
+      setMapcenter([data.countryInfo.lat, data.countryInfo.long]);
+      setMapZoom(4);
+    });
+    /* const data = await axios.get(url);
     setCountrySelected(countryCode);
     setCountryInfo(data.data);
     setMapcenter([data.data.countryInfo.lat, data.data.countryInfo.long]);
-    setMapZoom(4);
+    setMapZoom(4);*/
   };
 
   return (
@@ -103,7 +113,12 @@ function App() {
         </div>
 
         {/**Map */}
-        <Map center={mapCenter} zoom={mapZoom} />
+        <Map
+          countries={mapCountries}
+          casesType={"cases"}
+          center={mapCenter}
+          zoom={mapZoom}
+        />
       </div>
       <Card className="app_right">
         <CardContent>
