@@ -21,3 +21,7 @@ infobox_total {
 }
 
 .infobox_title {}
+
+.infobox-selected {
+    border-top: 10px solid greenyellow;
+}
