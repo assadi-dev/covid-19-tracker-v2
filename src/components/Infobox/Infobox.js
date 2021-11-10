@@ -1,10 +1,10 @@
 import { Card, CardContent, Typography } from "@mui/material";
 import React from "react";
+import "./infobox.css";
 
 function Infobox({ title, cases, total }) {
   return (
-    <Card>
-      <h2>Infobox</h2>
+    <Card className="infobox">
       <CardContent>
         <Typography className="infobox_title" color="textSecondary">
           {title}
