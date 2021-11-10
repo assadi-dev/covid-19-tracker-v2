@@ -13,12 +13,15 @@ import Map from "./components/Map/Map";
 import Table from "./components/Table/Table";
 import LineGraph from "./components/LineGraph/LineGraph";
 import { sortData } from "./components/utils";
+import "leaflet/dist/leaflet.css";
 
 function App() {
   const [countries, setCountries] = useState([]);
   const [countrySelected, setCountrySelected] = useState("worldwide");
   const [countryInfo, setCountryInfo] = useState({});
   const [tableData, setTableData] = useState([]);
+  const [mapCenter, setMapcenter] = useState({ lat: 34.80746, lng: -40.4796 });
+  const [mapZoom, setMapZoom] = useState(2);
 
   useEffect(() => {
     const url = "https://disease.sh/v3/covid-19/all";
@@ -54,8 +57,11 @@ function App() {
         ? "https://disease.sh/v3/covid-19/all"
         : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
     await axios.get(url).then((res) => {
+      const data = res.data;
       setCountrySelected(countryCode);
-      setCountryInfo(res.data);
+      setCountryInfo(data);
+      setMapcenter([data.countryInfo.lat, data.countryInfo.long]);
+      setMapZoom(4);
     });
   };
 
@@ -99,7 +105,7 @@ function App() {
         </div>
 
         {/**Map */}
-        <Map />
+        <Map center={mapCenter} zoom={mapZoom} />
       </div>
       <Card className="app_right">
         <CardContent>
