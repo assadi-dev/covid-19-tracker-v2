@@ -56,13 +56,11 @@ function App() {
       countryCode === "worldwide"
         ? "https://disease.sh/v3/covid-19/all"
         : `https://disease.sh/v3/covid-19/countries/${countryCode}`;
-    await axios.get(url).then((res) => {
-      const data = res.data;
-      setCountrySelected(countryCode);
-      setCountryInfo(data);
-      setMapcenter([data.countryInfo.lat, data.countryInfo.long]);
-      setMapZoom(4);
-    });
+    const data = await axios.get(url);
+    setCountrySelected(countryCode);
+    setCountryInfo(data.data);
+    setMapcenter([data.data.countryInfo.lat, data.data.countryInfo.long]);
+    setMapZoom(4);
   };
 
   return (
